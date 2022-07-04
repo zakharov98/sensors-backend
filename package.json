@@ -1,0 +1,24 @@
+{
+  "name": "sensors-backend",
+  "version": "1.0.0",
+  "description": "backend for sensors",
+  "main": "src/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zakharov98/sensors-backend.git"
+  },
+  "author": "zakharov98",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zakharov98/sensors-backend/issues"
+  },
+  "homepage": "https://github.com/zakharov98/sensors-backend#readme",
+  "dependencies": {
+    "express": "^4.18.1",
+    "pg": "^8.7.3",
+    "sequelize": "^6.21.2"
+  }
+}
