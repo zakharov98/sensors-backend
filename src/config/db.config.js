@@ -11,4 +11,5 @@ module.exports = {
         acquire: 30000,
         idle: 1000
     }
+    //https://sequelize.org/api/v6/class/src/sequelize.js~sequelize#instance-constructor-constructor
 };

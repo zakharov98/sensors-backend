@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-    const Sensor = sequelize.define('sensor', {
+    return sequelize.define('sensor', {
         sensorId: {
             type: Sequelize.INTEGER,
             allowNull: false,
@@ -26,5 +26,4 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.FLOAT,
         },
     });
-    return Sensor;
 };
