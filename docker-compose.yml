@@ -10,6 +10,12 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
+  app:
+    image: zakharov98/sensors-backend
+    restart: always
+    ports:
+      - "${API_PORT:-8001}:3000"
+
   adminer:
     image: adminer
     restart: always
