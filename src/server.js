@@ -4,18 +4,11 @@ const app = express();
 const db = require('./models');
 const router = require('./routes');
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
 db.sequelize.sync();
-
-/* Drop the table if it already exists */
 //db.sequelize.sync({ force: true }).then(() => { console.log("Drop and re-sync db."); });
 
-
-/* Routes */
-
-/* Middlewares */
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/api', router)
 
 const PORT = process.env.PORT || 3000;
