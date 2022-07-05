@@ -14,7 +14,7 @@ services:
     image: zakharov98/sensors-backend
     restart: always
     ports:
-      - "${API_PORT:-8001}:3000"
+      - "${API_PORT:-3000}:3000"
 
   adminer:
     image: adminer
