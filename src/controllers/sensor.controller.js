@@ -3,7 +3,7 @@ const Sensor = db.sensors;
 const Op = db.Sequelize.Op;
 
 exports.create = async (req, res) => {
-  const { sensorId, temp1, temp2, temp3, temp4, temp5, hum1, hum2 } = req.body;
+  const { sensorId, temp1, temp2, temp3, temp4, temp5, hum1, hum2, rain, batLevel } = req.body;
   try {
     const sensor = await Sensor.create({
       sensorId,
@@ -14,6 +14,8 @@ exports.create = async (req, res) => {
       temp5,
       hum1,
       hum2,
+      rain,
+      batLevel,
     });
     res.send({
       status: true,
