@@ -25,5 +25,11 @@ module.exports = (sequelize, Sequelize) => {
         hum2: {
             type: Sequelize.FLOAT,
         },
+        rain: {
+            type: Sequelize.INTEGER,
+        },
+        batLevel: {
+            type: Sequelize.FLOAT,
+        },
     });
 };

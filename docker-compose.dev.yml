@@ -18,5 +18,13 @@ services:
     depends_on:
       - "db"
 
+  adminer:
+    image: adminer
+    restart: always
+    environment:
+      ADMINER_DESIGN: "hydra"
+    ports:
+      - "${ADMINER_PORT:-8080}:8080"
+
 volumes: 
      pgdata:
