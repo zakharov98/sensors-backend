@@ -1,8 +1,6 @@
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 const db = require('../models');
 const Sensor = db.sensors;
-const Op = db.Sequelize.Op;
-const creds = require('../config/sensors-backend-9330f0d4ab1d.json')
 
 exports.create = async (req, res) => {
   const { sensorId, temp1, temp2, temp3, temp4, temp5, hum1, hum2, rain, batLevel } = req.body;
@@ -20,7 +18,10 @@ exports.create = async (req, res) => {
       batLevel,
     });
     const doc = new GoogleSpreadsheet('1LZPqn8fE5MYDWQ7s2tuyg2yuQpMKuNgsespPEEma7gY');
-    await doc.useServiceAccountAuth(creds);
+    await doc.useServiceAccountAuth({
+      client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
+      private_key: process.env.GOOGLE_PRIVATE_KEY,
+    });
     await doc.loadInfo();
     const sheet = doc.sheetsByIndex[0];
     await sheet.addRow({ sensorId: sensor.sensorId, temp1: sensor.temp1, temp2: sensor.temp2, temp3: sensor.temp3, temp4: sensor.temp4, temp5: sensor.temp5, hum1: sensor.hum1, hum2: sensor.hum2, rain: sensor.rain, batLevel: sensor.batLevel, createdAt: sensor.createdAt });

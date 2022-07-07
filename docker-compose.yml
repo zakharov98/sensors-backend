@@ -12,6 +12,12 @@ services:
     container_name: sensors-backend
     image: zakharov98/sensors-backend
     restart: always
+    environment:
+      - POSTGRES_PASSWORD: password
+      - POSTGRES_PORT: 5432
+      - API_PORT: 3004
+      - GOOGLE_SERVICE_ACCOUNT_EMAIL: GOOGLE_SERVICE_ACCOUNT_EMAIL
+      - GOOGLE_PRIVATE_KEY: GOOGLE_PRIVATE_KEY
     ports:
       - "${API_PORT:-3004}:3004"
     depends_on:
