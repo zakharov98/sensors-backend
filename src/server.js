@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
@@ -15,4 +16,5 @@ app.use('/api', router)
 const PORT = process.env.PORT || 3004;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}.`);
+    console.log(`Google Sheet is ${process.env.ENABLE_GOOGLE_SHEETS === 'true' ? 'enabled' : 'disabled'}`)
 });

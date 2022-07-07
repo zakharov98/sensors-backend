@@ -17,14 +17,16 @@ exports.create = async (req, res) => {
       rain,
       batLevel,
     });
-    const doc = new GoogleSpreadsheet('1LZPqn8fE5MYDWQ7s2tuyg2yuQpMKuNgsespPEEma7gY');
-    await doc.useServiceAccountAuth({
-      client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-      private_key: process.env.GOOGLE_PRIVATE_KEY,
-    });
-    await doc.loadInfo();
-    const sheet = doc.sheetsByIndex[0];
-    await sheet.addRow({ sensorId: sensor.sensorId, temp1: sensor.temp1, temp2: sensor.temp2, temp3: sensor.temp3, temp4: sensor.temp4, temp5: sensor.temp5, hum1: sensor.hum1, hum2: sensor.hum2, rain: sensor.rain, batLevel: sensor.batLevel, createdAt: sensor.createdAt });
+    if (process.env.ENABLE_GOOGLE_SHEETS === 'true') {
+      const doc = new GoogleSpreadsheet(process.env.GOOGLE_SHEET_ID);
+      await doc.useServiceAccountAuth({
+        client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
+        private_key: process.env.GOOGLE_PRIVATE_KEY,
+      });
+      await doc.loadInfo();
+      const sheet = doc.sheetsByIndex[0];
+      await sheet.addRow({ sensorId: sensor.sensorId, temp1: sensor.temp1, temp2: sensor.temp2, temp3: sensor.temp3, temp4: sensor.temp4, temp5: sensor.temp5, hum1: sensor.hum1, hum2: sensor.hum2, rain: sensor.rain, batLevel: sensor.batLevel, createdAt: sensor.createdAt });
+    }
     res.send({
       status: true,
       data: sensor
