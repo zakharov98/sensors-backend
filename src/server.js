@@ -13,8 +13,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/api', router)
 
-const PORT = process.env.PORT || 3004;
+const PORT = process.env.API_PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}.`);
-    console.log(`Google Sheet is ${process.env.ENABLE_GOOGLE_SHEETS === 'true' ? 'enabled' : 'disabled'}`)
+    console.log(`Google Sheet is ${process.env.ENABLE_GOOGLE_SHEETS === 'true' ? 'enabled' : 'disabled'}`);
 });
