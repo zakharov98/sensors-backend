@@ -3,36 +3,19 @@ const db = require('../models');
 const Sensor = db.sensors;
 
 exports.create = async (req, res) => {
-  const f1 = req.body.f1;
-  let [ sensorId, m1, m2, m3, m4, t1, t2, hour, minute, day, month, year ] = f1.split(',');
-
-  sensorId = parseInt(sensorId);
-  m1 = parseFloat(m1);
-  m2 = parseFloat(m2);
-  m3 = parseFloat(m3);
-  m4 = parseFloat(m4);
-  t1 = parseFloat(t1);
-  t2 = parseFloat(t2);
-  hour = parseInt(hour);
-  minute = parseInt(minute);
-  day = parseInt(day);
-  month = parseInt(month);
-  year = parseInt(year);
-
+  const { sensorId, temp1, temp2, temp3, temp4, temp5, hum1, hum2, rain, batLevel } = req.body;
   try {
     const sensor = await Sensor.create({
       sensorId,
-      m1,
-      m2,
-      m3,
-      m4,
-      t1,
-      t2,
-      hour,
-      minute,
-      day,
-      month,
-      year,
+      temp1,
+      temp2,
+      temp3,
+      temp4,
+      temp5,
+      hum1,
+      hum2,
+      rain,
+      batLevel,
     });
     if (process.env.ENABLE_GOOGLE_SHEETS === 'true') {
       const doc = new GoogleSpreadsheet(process.env.GOOGLE_SHEET_ID);
@@ -42,7 +25,7 @@ exports.create = async (req, res) => {
       });
       await doc.loadInfo();
       const sheet = doc.sheetsByIndex[0];
-      await sheet.addRow({ sensorId: sensor.sensorId, m1: sensor.m1, m2: sensor.m2, m3: sensor.m3, m4: sensor.m4, t1: sensor.t1, t2: sensor.t2, hour: sensor.hour, minute: sensor.minute, day: sensor.day, month: sensor.month, year: sensor.year });
+      await sheet.addRow({ sensorId: sensor.sensorId, temp1: sensor.temp1, temp2: sensor.temp2, temp3: sensor.temp3, temp4: sensor.temp4, temp5: sensor.temp5, hum1: sensor.hum1, hum2: sensor.hum2, rain: sensor.rain, batLevel: sensor.batLevel, createdAt: sensor.createdAt });
     }
     res.send({
       status: true,

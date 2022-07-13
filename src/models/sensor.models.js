@@ -4,32 +4,38 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.INTEGER,
             allowNull: false,
         },
-        temp1: {
+        m1: {
             type: Sequelize.FLOAT,
         },
-        temp2: {
+        m2: {
             type: Sequelize.FLOAT,
         },
-        temp3: {
+        m3: {
             type: Sequelize.FLOAT,
         },
-        temp4: {
+        m4: {
             type: Sequelize.FLOAT,
         },
-        temp5: {
+        t1: {
             type: Sequelize.FLOAT,
         },
-        hum1: {
+        t2: {
             type: Sequelize.FLOAT,
         },
-        hum2: {
-            type: Sequelize.FLOAT,
-        },
-        rain: {
+        hour: {
             type: Sequelize.INTEGER,
         },
-        batLevel: {
-            type: Sequelize.FLOAT,
+        minute: {
+            type: Sequelize.INTEGER,
+        },
+        day: {
+            type: Sequelize.INTEGER,
+        },
+        month: {
+            type: Sequelize.INTEGER,
+        },
+        year: {
+            type: Sequelize.INTEGER,
         },
     });
 };
