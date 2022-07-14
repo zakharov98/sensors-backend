@@ -16,6 +16,12 @@ module.exports = (sequelize, Sequelize) => {
         m4: {
             type: Sequelize.FLOAT,
         },
+        m5: {
+            type: Sequelize.FLOAT,
+        },
+        m6: {
+            type: Sequelize.FLOAT,
+        },
         t1: {
             type: Sequelize.FLOAT,
         },

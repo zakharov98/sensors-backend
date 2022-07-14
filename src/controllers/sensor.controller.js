@@ -4,13 +4,15 @@ const Sensor = db.sensors;
 
 exports.create = async (req, res) => {
   const f1 = req.body.f1;
-  let [ sensorId, m1, m2, m3, m4, t1, t2, hour, minute, day, month, year ] = f1.split(';');
+  let [ sensorId, m1, m2, m3, m4, m5, m6, t1, t2, hour, minute, day, month, year ] = f1.split(';');
 
   sensorId = parseInt(sensorId);
   m1 = parseFloat(m1);
   m2 = parseFloat(m2);
   m3 = parseFloat(m3);
   m4 = parseFloat(m4);
+  m5 = parseFloat(m5);
+  m6 = parseFloat(m6);
   t1 = parseFloat(t1);
   t2 = parseFloat(t2);
   hour = parseInt(hour);
@@ -26,6 +28,8 @@ exports.create = async (req, res) => {
       m2,
       m3,
       m4,
+      m5,
+      m6,
       t1,
       t2,
       hour,
@@ -42,7 +46,7 @@ exports.create = async (req, res) => {
       });
       await doc.loadInfo();
       const sheet = doc.sheetsByIndex[0];
-      await sheet.addRow({ sensorId: sensor.sensorId, m1: sensor.m1, m2: sensor.m2, m3: sensor.m3, m4: sensor.m4, t1: sensor.t1, t2: sensor.t2, hour: sensor.hour, minute: sensor.minute, day: sensor.day, month: sensor.month, year: sensor.year });
+      await sheet.addRow({ sensorId: sensor.sensorId, m1: sensor.m1, m2: sensor.m2, m3: sensor.m3, m4: sensor.m4, m5: sensor.m5, m6: sensor.m6, t1: sensor.t1, t2: sensor.t2, hour: sensor.hour, minute: sensor.minute, day: sensor.day, month: sensor.month, year: sensor.year });
     }
     res.send({
       status: true,
