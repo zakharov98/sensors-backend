@@ -4,7 +4,7 @@ const Sensor = db.sensors;
 
 exports.create = async (req, res) => {
   const f1 = req.body.f1;
-  let [ sensorId, m1, m2, m3, m4, t1, t2, hour, minute, day, month, year ] = f1.split(',');
+  let [ sensorId, m1, m2, m3, m4, t1, t2, hour, minute, day, month, year ] = f1.split(';');
 
   sensorId = parseInt(sensorId);
   m1 = parseFloat(m1);
