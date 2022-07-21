@@ -1,5 +1,6 @@
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 const db = require('../models');
+const sequelize = db.sequelize;
 const Sensor = db.sensors;
 
 exports.create = async (req, res) => {
@@ -66,6 +67,25 @@ exports.findAll = async (req, res) => {
     res.send({
       status: true,
       data: sensors
+    });
+  } catch (error) {
+    res.status(500).send({
+      status: false,
+      error: { msg: error.message || "Some error occurred while retrieving  Sensors." }
+    });
+  }
+};
+
+exports.charts = async (req, res) => {
+  try {
+    const [allData, metadataR1] = await sequelize.query(`SELECT "id", "m1", "m2", "m3", "m4", "m5", "m6", "t1", "t2", concat_ws(':', "hour", "minute") as "time", concat_ws('.', "day", "month", "year") as "date" FROM "sensors" ORDER BY id DESC LIMIT 100`);
+    const [groupedData, metadataR2] = await sequelize.query(`SELECT AVG("m1") as "m1", AVG("m2") as "m2", AVG("m3") as "m3", AVG("m4") as "m4", AVG("m5") as "m5", AVG("m6") as "m6", AVG("t1") as "t1", AVG("t2") as "t2", concat_ws('.', "day", "month", "year") as "date" FROM "sensors" GROUP BY "date" ORDER BY "date"`);
+    res.send({
+      status: true,
+      data: {
+        grouped: groupedData,
+        all: allData,
+      }
     });
   } catch (error) {
     res.status(500).send({
