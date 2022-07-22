@@ -78,16 +78,16 @@ exports.findAll = async (req, res) => {
 
 exports.charts = async (req, res) => {
   try {
-    const [sensorIds, metadataR1] = await sequelize.query(`SELECT "sensorId" FROM "sensors" GROUP BY "sensorId" ORDER BY "sensorId"`);
-    let result = [];
-    for (let index = 0; index < sensorIds.length; index++) {
-      const sensorId = sensorIds[index];
-      const [groupedData, metadataR2] = await sequelize.query(`SELECT "id", "m1", "m2", "m3", "m4", "m5", "m6", "t1", "t2", concat_ws(' ', concat_ws('.', "day", "month", "year"), concat_ws(':', "hour", "minute")) as "datetime" FROM "sensors" WHERE "sensorId"=${sensorId} ORDER BY id DESC LIMIT 500`);
-      result.push({ sensorId: sensorId, data: groupedData });
+    const [sensors, metadataR1] = await sequelize.query(`SELECT "sensorId" FROM "sensors" GROUP BY "sensorId" ORDER BY "sensorId"`);
+    let data = [];
+    for (let index = 0; index < sensors.length; index++) {
+      const sensor = sensors[index];
+      const [groupedData, metadataR2] = await sequelize.query(`SELECT "id", "m1", "m2", "m3", "m4", "m5", "m6", "t1", "t2", concat_ws(' ', concat_ws('.', "day", "month", "year"), concat_ws(':', "hour", "minute")) as "datetime" FROM "sensors" WHERE "sensorId"=${sensor.sensorId} ORDER BY id DESC LIMIT 500`);
+      data.push({ sensorId: sensor.sensorId, data: groupedData });
     }
     res.send({
       status: true,
-      data: result
+      data: data
     });
   } catch (error) {
     console.log(error);
