@@ -82,7 +82,7 @@ exports.charts = async (req, res) => {
     let data = [];
     for (let index = 0; index < sensors.length; index++) {
       const sensor = sensors[index];
-      const [groupedData, metadataR2] = await sequelize.query(`SELECT "id", "m1", "m2", "m3", "m4", "m5", "m6", "t1", "t2", concat_ws(' ', concat_ws('.', "day", "month", "year"), concat_ws(':', "hour", "minute")) as "datetime" FROM "sensors" WHERE "sensorId"=${sensor.sensorId} ORDER BY id DESC LIMIT 500`);
+      const [groupedData, metadataR2] = await sequelize.query(`SELECT "id", "m1", "m2", "m3", "m4", "m5", "m6", "t1", "t2", concat_ws(' ', concat_ws('.', "day", "month", "year"), concat_ws(':', "hour", "minute")) as "datetime" FROM "sensors" WHERE "sensorId"=${sensor.sensorId} ORDER BY id DESC LIMIT 100`);
       data.push({ sensorId: sensor.sensorId, data: groupedData });
     }
     res.send({
