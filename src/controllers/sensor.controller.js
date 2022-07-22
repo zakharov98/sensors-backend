@@ -5,7 +5,7 @@ const Sensor = db.sensors;
 
 exports.create = async (req, res) => {
   const f1 = req.body.f1;
-  let [ sensorId, m1, m2, m3, m4, m5, m6, t1, t2, hour, minute, day, month, year ] = f1.split(';');
+  let [sensorId, m1, m2, m3, m4, m5, m6, t1, t2, hour, minute, day, month, year] = f1.split(';');
 
   sensorId = parseInt(sensorId);
   m1 = parseFloat(m1);
@@ -78,14 +78,16 @@ exports.findAll = async (req, res) => {
 
 exports.charts = async (req, res) => {
   try {
-    const [allData, metadataR1] = await sequelize.query(`SELECT "id", "sensorId", "m1", "m2", "m3", "m4", "m5", "m6", "t1", "t2", concat_ws(':', "hour", "minute") as "time", concat_ws('.', "day", "month", "year") as "date" FROM "sensors" ORDER BY id DESC LIMIT 500`);
-    const [groupedData, metadataR2] = await sequelize.query(`SELECT AVG("m1") as "m1", AVG("m2") as "m2", AVG("m3") as "m3", AVG("m4") as "m4", AVG("m5") as "m5", AVG("m6") as "m6", AVG("t1") as "t1", AVG("t2") as "t2", concat_ws('.', "day", "month", "year") as "date", "sensorId" FROM "sensors" GROUP BY "date", "sensorId" ORDER BY "date"`);
+    const [sensorIds, metadataR1] = await sequelize.query(`SELECT "sensorId" FROM "sensors" GROUP BY "sensorId" ORDER BY "sensorId"`);
+    let result = [];
+    for (let index = 0; index < sensorIds.length; index++) {
+      const sensorId = sensorIds[index];
+      const [groupedData, metadataR2] = await sequelize.query(`SELECT "id", "m1", "m2", "m3", "m4", "m5", "m6", "t1", "t2", concat_ws(' ', concat_ws('.', "day", "month", "year"), concat_ws(':', "hour", "minute")) as "datetime" FROM "sensors" WHERE "sensorId"=${sensorId} ORDER BY id DESC LIMIT 500`);
+      result.push({ sensorId: sensorId, data: groupedData });
+    }
     res.send({
       status: true,
-      data: {
-        grouped: groupedData,
-        all: allData,
-      }
+      data: result
     });
   } catch (error) {
     console.log(error);
