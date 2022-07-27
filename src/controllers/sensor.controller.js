@@ -94,7 +94,6 @@ exports.charts = async (req, res) => {
   try {
     const offset = req.query?.offset ? parseInt(req.query.offset) : (req.body?.offset? req.body.offset : 0);
     const count = req.query?.count ? parseInt(req.query.count) : (req.body?.count? req.body.count : 100);
-    console.log([offset, count]);
     const [sensors, metadataR1] = await sequelize.query(`SELECT "sensorId" FROM "sensors" GROUP BY "sensorId" ORDER BY "sensorId"`);
     let data = [];
     for (let index = 0; index < sensors.length; index++) {
