@@ -22,14 +22,13 @@ exports.create = async (req, res) => {
     day = parseInt(day);
     month = parseInt(month);
     year = parseInt(year);
-    
-    if(day === 0)
-    {
+
+    if (day === 0) {
       const lastRow = await Sensor.findOne({
         order: [['createdAt', 'DESC']],
       });
       const lastDate = new Date(lastRow.year, lastRow.month, lastRow.day, lastRow.hour, lastRow.minute, 0, 0);
-      const newDate = new Date(lastDate.getTime() + 15*60000);
+      const newDate = new Date(lastDate.getTime() + 15 * 60000);
       hour = newDate.getHours();
       minute = newDate.getMinutes();
       day = newDate.getDate();
@@ -54,14 +53,20 @@ exports.create = async (req, res) => {
       year,
     });
     if (process.env.ENABLE_GOOGLE_SHEETS === 'true') {
-      const doc = new GoogleSpreadsheet(process.env.GOOGLE_SHEET_ID);
-      await doc.useServiceAccountAuth({
-        client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-        private_key: process.env.GOOGLE_PRIVATE_KEY,
-      });
-      await doc.loadInfo();
-      const sheet = doc.sheetsByIndex[0];
-      await sheet.addRow({ sensorId: sensor.sensorId, m1: sensor.m1, m2: sensor.m2, m3: sensor.m3, m4: sensor.m4, m5: sensor.m5, m6: sensor.m6, t1: sensor.t1, t2: sensor.t2, hour: sensor.hour, minute: sensor.minute, day: sensor.day, month: sensor.month, year: sensor.year });
+      try {
+        const doc = new GoogleSpreadsheet(process.env.GOOGLE_SHEET_ID);
+        await doc.useServiceAccountAuth({
+          client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
+          private_key: process.env.GOOGLE_PRIVATE_KEY,
+        });
+        await doc.loadInfo();
+        const sheet = doc.sheetsByIndex[0];
+        const rows = await sheet.getRows();
+        const idx = rows.length + 2;
+        await sheet.addRow({ sensorId: sensor.sensorId, m1: sensor.m1, m2: sensor.m2, m3: sensor.m3, m4: sensor.m4, m5: sensor.m5, m6: sensor.m6, t1: sensor.t1, t2: sensor.t2, hour: sensor.hour, minute: sensor.minute, day: sensor.day, month: sensor.month, year: sensor.year, time: `=ВРЕМЯ(P${idx};Q${idx};0)`, date: `=ДАТА(T${idx};S${idx};R${idx})` });
+      } catch (error) {
+        console.log(error.message);
+      }
     }
     res.send({
       status: true,
@@ -92,8 +97,8 @@ exports.findAll = async (req, res) => {
 
 exports.charts = async (req, res) => {
   try {
-    const offset = req.query?.offset ? parseInt(req.query.offset) : (req.body?.offset? req.body.offset : 0);
-    const count = req.query?.count ? parseInt(req.query.count) : (req.body?.count? req.body.count : 100);
+    const offset = req.query?.offset ? parseInt(req.query.offset) : (req.body?.offset ? req.body.offset : 0);
+    const count = req.query?.count ? parseInt(req.query.count) : (req.body?.count ? req.body.count : 100);
     const [sensors, metadataR1] = await sequelize.query(`SELECT "sensorId" FROM "sensors" GROUP BY "sensorId" ORDER BY "sensorId"`);
     let data = [];
     for (let index = 0; index < sensors.length; index++) {
