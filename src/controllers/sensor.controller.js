@@ -21,7 +21,7 @@ exports.create = async (req, res) => {
     minute = parseInt(minute);
     day = parseInt(day);
     month = parseInt(month);
-    year = parseInt(year);
+    year = parseInt(year) + 2000;
 
     if (day === 0) {
       const lastRow = await Sensor.findOne({
@@ -82,7 +82,7 @@ exports.create = async (req, res) => {
 
 exports.findAll = async (req, res) => {
   try {
-    const sensors = await Sensor.findAll();
+    const [sensors, metadataR1] = await sequelize.query(`SELECT "id", "sensorId", "m1", "m2", "m3", "m4", "m5", "m5", "m6", "t1", "t2", LPAD("hour"::text, 2, '0') as "hour", LPAD("minute"::text, 2, '0') as "minute", LPAD("day"::text, 2, '0') as "day", LPAD("month"::text, 2, '0') as "month", "year", "createdAt", "updatedAt" FROM "sensors"`);
     res.send({
       status: true,
       data: sensors
@@ -103,7 +103,7 @@ exports.charts = async (req, res) => {
     let data = [];
     for (let index = 0; index < sensors.length; index++) {
       const sensor = sensors[index];
-      const [groupedData, metadataR2] = await sequelize.query(`SELECT "id", "m1", "m2", "m3", "m4", "m5", "m6", "t1", "t2", concat_ws(' ', concat_ws('.', "day", "month", "year"), concat_ws(':', "hour", "minute")) as "datetime" FROM "sensors" WHERE "sensorId"=${sensor.sensorId} ORDER BY id DESC LIMIT ${count} OFFSET ${offset}`);
+      const [groupedData, metadataR2] = await sequelize.query(`SELECT "id", "m1", "m2", "m3", "m4", "m5", "m6", "t1", "t2", concat_ws(' ', concat_ws('.', LPAD("day"::text, 2, '0'), LPAD("month"::text, 2, '0'), "year"), concat_ws(':', LPAD("month"::text, 2, '0'), LPAD("month"::text, 2, '0'))) as "datetime" FROM "sensors" WHERE "sensorId"=${sensor.sensorId} ORDER BY id DESC LIMIT ${count} OFFSET ${offset}`);
       data.push({ sensorId: sensor.sensorId, data: groupedData });
     }
     res.send({
